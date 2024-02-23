@@ -41,7 +41,7 @@ Additional Contributors: UT Coding Bootcamp created the initial file structure a
 
 3rd Party Assets: None
 
-Tutorials: None
+Tutorials: While this tutorial was not directly followed, it contained important information and walkthroughs. [Digital Ocean Interactive Prompts](https://www.digitalocean.com/community/tutorials/nodejs-interactive-command-line-prompts)
 
 ## Tests
 
