@@ -1,5 +1,3 @@
-console.log(`--------------------index.js has started.--------------------`);
-
 // Loads the npm inquirer and file system packages into this javascript and allows them to be called.
 const inquirer = require("inquirer");
 const fs = require("fs");
@@ -37,16 +35,22 @@ inquirer
       message: "What are some use case examples for your project?",
     },
     {
+      type: "list",
       name: "credits1",
       message: "Did anyone else work on your project?",
+      choices: ["Yes", "No"],
     },
     {
+      type: "list",
       name: "credits2",
       message: "Did you use any third-party assets when creating your project?",
+      choices: ["Yes", "No"],
     },
     {
+      type: "list",
       name: "credits3",
       message: "Did you follow any tutorials when creating your project?",
+      choices: ["Yes", "No"],
     },
     {
       type: "list",
@@ -81,11 +85,13 @@ inquirer
   // TODO: Make it so license prints the full license and adds a tag to the top instead of just printing the name.
   .then((answers) => {
     const readMeContent = `
-# <${answers.title}>
+# ${answers.title}
 
 ## Description
 
-${answers.description1} ${answers.description2} ${answers.description3}
+${answers.description1}
+${answers.description2}
+${answers.description3}
 
 ## Table of Contents
 
@@ -97,11 +103,14 @@ ${answers.installation}
 
 ## Usage
 
-${answers.usage1} ${answers.usage2}
+${answers.usage1}
+${answers.usage2}
 
 ## Credits
 
-${answers.credits1} ${answers.credits2} ${answers.credits3}
+${answers.credits1}
+${answers.credits2}
+${answers.credits3}
 
 ## License
 
