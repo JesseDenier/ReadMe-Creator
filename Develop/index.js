@@ -42,26 +42,54 @@ inquirer
     },
     {
       name: "credits2",
-      message: "Did you use any third-party asses when creating your project?",
+      message: "Did you use any third-party assets when creating your project?",
     },
     {
       name: "credits3",
       message: "Did you follow any tutorials when creating your project?",
     },
     {
+      type: "list",
       name: "license",
-      message: "Will you be using the standard MIT lisense or something else?",
+      message: "Which license will you be using for your project?",
+      choices: [
+        "Apache",
+        "GNU",
+        "MIT",
+        "BSD",
+        "Boost",
+        "Creative Commons",
+        "Eclipse",
+        "Mozilla",
+        "The Unilicense",
+      ],
+    },
+    {
+      name: "gitHub",
+      message: "What is your GitHub username?",
+    },
+    {
+      name: "email",
+      message: "What is your email address?",
     },
   ])
-  // Lays out the users answers in an organized fashion
+  // Lays out the users answers in an organized fashion based on sample README.md.
+  // TODO: Add text and links to Table of Contents.
+  // TODO: Add a way to link a photo to Usage.
+  // TODO: Change the license question .
+  // TODO: Add questions and answer locations for Tests, and Questions
+  // TODO: Make it so license prints the full license and adds a tag to the top instead of just printing the name.
   .then((answers) => {
-    // Construct HTML content with user's answers
     const readMeContent = `
 # <${answers.title}>
 
 ## Description
 
 ${answers.description1} ${answers.description2} ${answers.description3}
+
+## Table of Contents
+
+???
 
 ## Installation
 
@@ -78,8 +106,18 @@ ${answers.credits1} ${answers.credits2} ${answers.credits3}
 ## License
 
 ${answers.license}
+
+## Tests
+
+???
+
+## Questions
+
+Feel free to reach out to me with any additional questions you may have.
+Github Profile: https://www.github.com/${answers.gitHub}
+Email Address: ${answers.email}
     `;
-    // Write HTML content to a file
+    // Creates a README.md file and adds the content to the file.
     fs.writeFile("README.md", readMeContent, (err) => {
       if (err) {
         console.error(err);
