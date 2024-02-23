@@ -33,124 +33,24 @@ function createLicenseBadge(answers) {
   }
 }
 
-// Prompts the user with a series of questions.
-inquirer
-  .prompt([
-    {
-      name: "title",
-      message: "What is the title of your project?",
-    },
-    {
-      name: "descriptionWhat",
-      message: "What does your project do?",
-    },
-    {
-      name: "descriptionWhy",
-      message: "Why did you create your project?",
-    },
-    {
-      name: "descriptionHow",
-      message: "How does your project work?",
-    },
-    {
-      name: "installation",
-      message:
-        "Step by step. What needs to be done to install and run your project?",
-    },
-    {
-      name: "usage",
-      message: "How does the end-user use your project?",
-    },
-    {
-      name: "usageExample",
-      message: "What are some use case examples for your project?",
-    },
-    {
-      type: "list",
-      name: "creditsPeople",
-      message: "Did anyone else work on your project?",
-      choices: ["Yes", "No"],
-    },
-    {
-      type: "input",
-      name: "creditsPeopleList",
-      message:
-        "List who else worked on the project. Seperate each one with a comma and space.",
-      when: (answers) => answers.creditsPeople === "Yes",
-    },
-    {
-      type: "list",
-      name: "creditsAssets",
-      message: "Did you use any third-party assets when creating your project?",
-      choices: ["Yes", "No"],
-    },
-    {
-      type: "input",
-      name: "creditsAssetsList",
-      message:
-        "List all third-party assets used shen creating your project. Seperate each one with a comma and space.",
-      when: (answers) => answers.creditsAssets === "Yes",
-    },
-    {
-      type: "list",
-      name: "creditsTutorials",
-      message: "Did you follow any tutorials when creating your project?",
-      choices: ["Yes", "No"],
-    },
-    {
-      type: "input",
-      name: "creditsTutorialsList",
-      message:
-        "List all turorials you used when creating your project. Seperate each one with a comma and space.",
-      when: (answers) => answers.creditsTutorials === "Yes",
-    },
-    {
-      type: "list",
-      name: "license",
-      message: "Which license will you be using for your project?",
-      choices: [
-        "Apache",
-        "GNU",
-        "MIT",
-        "BSD",
-        "Boost",
-        "Creative Commons",
-        "Eclipse",
-        "Mozilla",
-        "The Unilicense",
-      ],
-    },
-    {
-      type: "list",
-      name: "tests",
-      message: "Did you create any tests for the end user to replicate?",
-      choices: ["Yes", "No"],
-    },
-    {
-      type: "input",
-      name: "testsList",
-      message:
-        "Write out what tests you ran, and how the user can replicate them.",
-      when: (answers) => answers.tests === "Yes",
-    },
-    {
-      name: "gitHub",
-      message: "What is your GitHub username?",
-    },
-    {
-      name: "email",
-      message: "What is your email address?",
-    },
-  ])
-  // Lays out the users answers in an organized fashion based on sample README.md.
-  // TODO: Add a way to link a photo to Usage.
-  // TODO: Make it so license prints the full license and adds a tag to the top instead of just printing the name.
-  .then((answers) => {
-    createLicenseBadge(answers);
-    const readMeContent = `
-# ${answers.title}
-
+// TODO: Add a way to link a photo to Usage.
+// Creates an object 'readMeContent' that has proper styling and inserts the users answers.
+function createMarkdown(answers) {
+  if (answers.testsList === undefined) {
+    answers.testsList = `No sample tests have currently been written for end users. Feel free to experiment.`;
+  }
+  if (answers.creditsPeopleList === undefined) {
+    answers.creditsPeopleList = `None, this project was created entirely by ${answers.name}`;
+  }
+  if (answers.creditsAssetsList === undefined) {
+    answers.creditsAssetsList = `None`;
+  }
+  if (answers.creditsTutorialsList === undefined) {
+    answers.creditsTutorialsList = `None`;
+  }
+  const readMeContent = `
 ${licenseBadge}
+  # ${answers.title}
 
 ## Description
 
@@ -158,12 +58,12 @@ ${answers.descriptionWhat}\n${answers.descriptionWhy}\n${answers.descriptionHow}
 
 ## Table of Contents
 
-- [Installation] (#installation)
-- [Usage] (#usage)
-- [Credits] (#credits)
-- [License] (#license)
-- [Tests] (#tests)
-- [Questions] (#questions)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Credits](#credits)
+- [License](#license)
+- [Tests](#tests)
+- [Questions](#questions)
 
 ## Installation
 
@@ -175,8 +75,8 @@ ${answers.usage}\n${answers.usageExample}
 
 ## Credits
 
-Additional Contributors: ${answers.creditsPeopleList}
-3rd Party Assets: ${answers.creditsAssetsList}
+Additional Contributors: ${answers.creditsPeopleList}\n
+3rd Party Assets: ${answers.creditsAssetsList}\n
 Tutorials: ${answers.creditsTutorialsList}
 
 ## License
@@ -185,29 +85,150 @@ This project is licensed under the terms of the ${answers.license} license. See 
 
 ## Tests
 
-${answers.tests}
+${answers.testsList}
 
 ## Questions
 
-Feel free to reach out to me with any additional questions you may have.
-Github Profile: https://www.github.com/${answers.gitHub}
-Email Address: ${answers.email}
-    `;
-    // Creates a README.md file and adds the content to the file.
-    fs.writeFile("README.md", readMeContent, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("README file generated!");
-      }
-    });
+Feel free to reach out to me with any additional questions you may have.\n
+Github Profile: https://www.github.com/${answers.gitHub}\n
+Email Address: ${answers.email}`;
+  return readMeContent;
+}
+
+// Creates a README.md file and adds the generated content to that file.
+function createREADME(readMeContent) {
+  fs.writeFile("README.md", readMeContent, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("README file generated!");
+    }
   });
+}
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
-
-// TODO: Create a function to initialize app
-function init() {}
+// Prompts the user with a series of questions and then runs multiple functions to convert those answers into a README.md.
+function init() {
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        message: "What is your name?",
+      },
+      {
+        name: "title",
+        message: "What is the title of your project?",
+      },
+      {
+        name: "descriptionWhat",
+        message: "What does your project do?",
+      },
+      {
+        name: "descriptionWhy",
+        message: "Why did you create your project?",
+      },
+      {
+        name: "descriptionHow",
+        message: "How does your project work?",
+      },
+      {
+        name: "installation",
+        message:
+          "Step by step. What needs to be done to install and run your project?",
+      },
+      {
+        name: "usage",
+        message: "How does the end-user use your project?",
+      },
+      {
+        name: "usageExample",
+        message: "What are some use case examples for your project?",
+      },
+      {
+        type: "list",
+        name: "creditsPeople",
+        message: "Did anyone else work on your project?",
+        choices: ["Yes", "No"],
+      },
+      {
+        type: "input",
+        name: "creditsPeopleList",
+        message:
+          "List who else worked on the project. Seperate each one with a comma and space.",
+        when: (answers) => answers.creditsPeople === "Yes",
+      },
+      {
+        type: "list",
+        name: "creditsAssets",
+        message:
+          "Did you use any third-party assets when creating your project?",
+        choices: ["Yes", "No"],
+      },
+      {
+        type: "input",
+        name: "creditsAssetsList",
+        message:
+          "List all third-party assets used shen creating your project. Seperate each one with a comma and space.",
+        when: (answers) => answers.creditsAssets === "Yes",
+      },
+      {
+        type: "list",
+        name: "creditsTutorials",
+        message: "Did you follow any tutorials when creating your project?",
+        choices: ["Yes", "No"],
+      },
+      {
+        type: "input",
+        name: "creditsTutorialsList",
+        message:
+          "List all turorials you used when creating your project. Seperate each one with a comma and space.",
+        when: (answers) => answers.creditsTutorials === "Yes",
+      },
+      {
+        type: "list",
+        name: "license",
+        message: "Which license will you be using for your project?",
+        choices: [
+          "Apache",
+          "GNU",
+          "MIT",
+          "BSD",
+          "Boost",
+          "Creative Commons",
+          "Eclipse",
+          "Mozilla",
+          "The Unilicense",
+        ],
+      },
+      {
+        type: "list",
+        name: "tests",
+        message: "Did you create any tests for the end user to replicate?",
+        choices: ["Yes", "No"],
+      },
+      {
+        type: "input",
+        name: "testsList",
+        message:
+          "Write out what tests you ran, and how the user can replicate them.",
+        when: (answers) => answers.tests === "Yes",
+      },
+      {
+        name: "gitHub",
+        message: "What is your GitHub username?",
+      },
+      {
+        name: "email",
+        message: "What is your email address?",
+      },
+    ])
+    // Lays out the users answers in an organized fashion based on sample README.md.
+    .then((answers) => {
+      createLicenseBadge(answers);
+      createMarkdown(answers);
+      const readMeContent = createMarkdown(answers);
+      createREADME(readMeContent);
+    });
+}
 
 // Function call to initialize app
 init();
