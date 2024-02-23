@@ -10,15 +10,15 @@ inquirer
       message: "What is the title of your project?",
     },
     {
-      name: "description1",
+      name: "descriptionWhat",
       message: "What does your project do?",
     },
     {
-      name: "description2",
+      name: "descriptionWhy",
       message: "Why did you create your project?",
     },
     {
-      name: "description3",
+      name: "descriptionHow",
       message: "How does your project work?",
     },
     {
@@ -27,30 +27,51 @@ inquirer
         "Step by step. What needs to be done to install and run your project?",
     },
     {
-      name: "usage1",
+      name: "usage",
       message: "How does the end-user use your project?",
     },
     {
-      name: "usage2",
+      name: "usageExample",
       message: "What are some use case examples for your project?",
     },
     {
       type: "list",
-      name: "credits1",
+      name: "creditsPeople",
       message: "Did anyone else work on your project?",
       choices: ["Yes", "No"],
     },
     {
+      type: "input",
+      name: "creditsPeopleList",
+      message:
+        "List who else worked on the project. Seperate each one with a comma and space.",
+      when: (answers) => answers.creditsPeople === "Yes",
+    },
+    {
       type: "list",
-      name: "credits2",
+      name: "creditsAssets",
       message: "Did you use any third-party assets when creating your project?",
       choices: ["Yes", "No"],
     },
     {
+      type: "input",
+      name: "creditsAssetsList",
+      message:
+        "List all third-party assets used shen creating your project. Seperate each one with a comma and space.",
+      when: (answers) => answers.creditsAssets === "Yes",
+    },
+    {
       type: "list",
-      name: "credits3",
+      name: "creditsTutorials",
       message: "Did you follow any tutorials when creating your project?",
       choices: ["Yes", "No"],
+    },
+    {
+      type: "input",
+      name: "creditsTutorialsList",
+      message:
+        "List all turorials you used when creating your project. Seperate each one with a comma and space.",
+      when: (answers) => answers.creditsTutorials === "Yes",
     },
     {
       type: "list",
@@ -66,7 +87,27 @@ inquirer
         "Eclipse",
         "Mozilla",
         "The Unilicense",
+        "*Custom",
       ],
+    },
+    {
+      type: "input",
+      name: "licenseCustom",
+      message: "Please write out your custom license.",
+      when: (answers) => answers.license === "*Custom",
+    },
+    {
+      type: "list",
+      name: "tests",
+      message: "Did you create any tests for the end user to replicate?",
+      choices: ["Yes", "No"],
+    },
+    {
+      type: "input",
+      name: "testsList",
+      message:
+        "Write out what tests you ran, and how the user can replicate them.",
+      when: (answers) => answers.tests === "Yes",
     },
     {
       name: "gitHub",
@@ -78,10 +119,7 @@ inquirer
     },
   ])
   // Lays out the users answers in an organized fashion based on sample README.md.
-  // TODO: Add text and links to Table of Contents.
   // TODO: Add a way to link a photo to Usage.
-  // TODO: Change the license question .
-  // TODO: Add questions and answer locations for Tests, and Questions
   // TODO: Make it so license prints the full license and adds a tag to the top instead of just printing the name.
   .then((answers) => {
     const readMeContent = `
@@ -89,13 +127,16 @@ inquirer
 
 ## Description
 
-${answers.description1}
-${answers.description2}
-${answers.description3}
+${answers.descriptionWhat}\n${answers.descriptionWhy}\n${answers.descriptionHow}
 
 ## Table of Contents
 
-???
+- [Installation] (#installation)
+- [Usage] (#usage)
+- [Credits] (#credits)
+- [License] (#license)
+- [Tests] (#tests)
+- [Questions] (#questions)
 
 ## Installation
 
@@ -103,14 +144,13 @@ ${answers.installation}
 
 ## Usage
 
-${answers.usage1}
-${answers.usage2}
+${answers.usage}\n${answers.usageExample}
 
 ## Credits
 
-${answers.credits1}
-${answers.credits2}
-${answers.credits3}
+Additional Contributors: ${answers.creditsPeopleList}
+3rd Party Assets: ${answers.creditsAssetsList}
+Tutorials: ${answers.creditsTutorialsList}
 
 ## License
 
@@ -118,7 +158,7 @@ ${answers.license}
 
 ## Tests
 
-???
+${answers.tests}
 
 ## Questions
 
@@ -144,5 +184,3 @@ function init() {}
 
 // Function call to initialize app
 init();
-
-//console.log(`---------------------index.js has ended.---------------------`);
