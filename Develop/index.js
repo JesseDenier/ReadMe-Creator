@@ -2,6 +2,37 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
 
+// Creates an object 'licenseBadge' based on the users choice to the license question.
+function createLicenseBadge(answers) {
+  if (answers.license === "Apache") {
+    licenseBadge = `[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)`;
+  }
+  if (answers.license === "GNU") {
+    licenseBadge = `[![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)`;
+  }
+  if (answers.license === "MIT") {
+    licenseBadge = `[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`;
+  }
+  if (answers.license === "BSD") {
+    licenseBadge = `[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)`;
+  }
+  if (answers.license === "Boost") {
+    licenseBadge = `[![License: Boost](https://img.shields.io/badge/License-Boost%201.0-lightblue.svg)](https://www.boost.org/LICENSE_1_0.txt)`;
+  }
+  if (answers.license === "Creative Commons") {
+    licenseBadge = `[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-green.svg)](http://creativecommons.org/publicdomain/zero/1.0/)`;
+  }
+  if (answers.license === "Eclipse") {
+    licenseBadge = `[![License: EPL-2.0](https://img.shields.io/badge/License-EPL%202.0-red.svg)](https://opensource.org/licenses/EPL-2.0)`;
+  }
+  if (answers.license === "Mozilla") {
+    licenseBadge = `[![License: MPL-2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)`;
+  }
+  if (answers.license === "The Unilicense") {
+    licenseBadge = `[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)`;
+  }
+}
+
 // Prompts the user with a series of questions.
 inquirer
   .prompt([
@@ -87,14 +118,7 @@ inquirer
         "Eclipse",
         "Mozilla",
         "The Unilicense",
-        "*Custom",
       ],
-    },
-    {
-      type: "input",
-      name: "licenseCustom",
-      message: "Please write out your custom license.",
-      when: (answers) => answers.license === "*Custom",
     },
     {
       type: "list",
@@ -122,8 +146,11 @@ inquirer
   // TODO: Add a way to link a photo to Usage.
   // TODO: Make it so license prints the full license and adds a tag to the top instead of just printing the name.
   .then((answers) => {
+    createLicenseBadge(answers);
     const readMeContent = `
 # ${answers.title}
+
+${licenseBadge}
 
 ## Description
 
@@ -154,7 +181,7 @@ Tutorials: ${answers.creditsTutorialsList}
 
 ## License
 
-${answers.license}
+This project is licensed under the terms of the ${answers.license} license. See the badge at the top of the README for more details.
 
 ## Tests
 
