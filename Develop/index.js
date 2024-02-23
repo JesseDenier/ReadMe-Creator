@@ -1,13 +1,16 @@
 console.log(`--------------------index.js has started.--------------------`);
 
 // Loads the npm inquirer and file system packages into this javascript and allows them to be called.
-const inquirer = require('inquirer');
-const fs = require('fs');
+const inquirer = require("inquirer");
+const fs = require("fs");
 
-// A series of questions that will appear in the console.
-// TODO: Currently these answers just appear as a console log at the end and then are not saved or added to a README.
+// Prompts the user with a series of questions.
 inquirer
   .prompt([
+    {
+      name: "title",
+      message: "What is the title of your project?",
+    },
     {
       name: "description1",
       message: "What does your project do?",
@@ -50,8 +53,40 @@ inquirer
       message: "Will you be using the standard MIT lisense or something else?",
     },
   ])
+  // Lays out the users answers in an organized fashion
   .then((answers) => {
-    console.info("Answer:", answers);
+    // Construct HTML content with user's answers
+    const readMeContent = `
+# <${answers.title}>
+
+## Description
+
+${answers.description1} ${answers.description2} ${answers.description3}
+
+## Installation
+
+${answers.installation}
+
+## Usage
+
+${answers.usage1} ${answers.usage2}
+
+## Credits
+
+${answers.credits1} ${answers.credits2} ${answers.credits3}
+
+## License
+
+${answers.license}
+    `;
+    // Write HTML content to a file
+    fs.writeFile("README.md", readMeContent, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("README file generated!");
+      }
+    });
   });
 
 // TODO: Create a function to write README file
