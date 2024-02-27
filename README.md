@@ -14,7 +14,7 @@ This project works by running npm inquirer and fs modules to dynamically create 
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Credits](#credits)
+- [Contributing](#contributing)
 - [License](#license)
 - [Tests](#tests)
 - [Questions](#questions)
